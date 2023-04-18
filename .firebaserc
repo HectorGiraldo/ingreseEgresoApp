@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ingreso-egresoapp-7614b": {
+      "hosting": {
+        "ingreseEgresoApp": [
+          "ingreso-egresoapp-7614b"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ingreso-egresoapp-7614b"
+  }
+}
