@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -13,6 +14,12 @@ import Swal from 'sweetalert2';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private router: Router = inject(Router);
+
+  initAuthListener() {
+    this.auth.onAuthStateChanged((user) => {
+      console.log(user);
+    });
+  }
 
   crearUsuario(nombre: string, email: string, password: string) {
     Swal.fire({
@@ -59,5 +66,13 @@ export class AuthService {
           confirmButtonText: 'ok',
         });
       });
+  }
+
+  logout() {
+    return this.auth.signOut();
+  }
+
+  isAuth() {
+    return of(this.auth.onAuthStateChanged((user) => {}));
   }
 }
