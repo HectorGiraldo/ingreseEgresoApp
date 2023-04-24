@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Injectable({
@@ -73,6 +73,9 @@ export class AuthService {
   }
 
   isAuth() {
-    return of(this.auth.onAuthStateChanged((user) => {}));
+    return new Observable((subscriber) => {
+      const unsubscribe = this.auth.onAuthStateChanged(subscriber);
+      return { unsubscribe };
+    }).pipe(map((fUser) => fUser != null));
   }
 }
