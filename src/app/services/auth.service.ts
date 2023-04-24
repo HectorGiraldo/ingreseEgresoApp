@@ -4,9 +4,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
+import { Firestore, addDoc, collection } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import Swal from 'sweetalert2';
+import { Usuario } from '../models/usuario.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +16,7 @@ import Swal from 'sweetalert2';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private router: Router = inject(Router);
+  private firestore: Firestore = inject(Firestore);
 
   initAuthListener() {
     this.auth.onAuthStateChanged((user) => {
@@ -29,10 +32,12 @@ export class AuthService {
       },
     });
     createUserWithEmailAndPassword(this.auth, email, password)
-      .then((credenciales) => {
+      .then(({ user }) => {
         Swal.close();
         this.router.navigate(['/']);
-        console.log(credenciales);
+        const newUser = new Usuario(user.uid, nombre, email);
+        const useRef = collection(this.firestore, `user`);
+        return addDoc(useRef, { ...newUser });
       })
       .catch((err) => {
         Swal.fire({
@@ -56,7 +61,6 @@ export class AuthService {
       .then((credenciales) => {
         Swal.close();
         this.router.navigate(['/']);
-        console.log(credenciales);
       })
       .catch((err) => {
         Swal.fire({
